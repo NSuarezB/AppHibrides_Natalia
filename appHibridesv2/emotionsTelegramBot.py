@@ -38,7 +38,6 @@ json_keyboard2 = json.dumps({'keyboard': [["feliz.txt"], ["trist.txt"]],
 
 
 @bot.message_handler(regexp="adios")
-# Emociones felices=FreasesFeliz
 def adios(message):
     bot.send_message(message.chat.id, "Hasta pronto o/")
 
@@ -46,34 +45,70 @@ def adios(message):
 def send_welcome(message):
     bot.send_message(message.chat.id, "Hola, benvenido/da! <3")
     bot.send_message(message.chat.id, "Como te va hoy? ")
-    bot.send_message(message.chat.id, "Si no sabes que hacer escribe /help")
+    bot.send_message(message.chat.id, "Si no sabes que hacer escribe /help ")
 
 @bot.message_handler(commands=['help'])
 def help_me(message):
     bot.send_message(message.chat.id, "Puedes decirme como te fue hoy el dia")
-    bot.send_message(message.chat.id, "Tambien puedes añadir frases con /add")
+    bot.send_message(message.chat.id, "Tambien puedes añadir frases en el arxivo Feliz con /addF")
+    bot.send_message(message.chat.id, "Tambien puedes añadir frases en el arxivo Triste con /addT")
+    bot.send_message(message.chat.id, "Si no quieres hablar conmigo solo tienes que decir adios")
 
 
-@bot.message_handler(commands=['add'])
+'''def frase(messages):
+    for message in messages:
+        arxiuGeneral = open("feliz.txt",'a')
+        arxiuGeneral.write(message.text+"\n")
+        arxiuGeneral.close()
+        break
+'''
+
+@bot.message_handler(commands=['addF'])
 def add_frase(message):
+    frase=" "
+    op=" "
+    keyboard=message.text.split()
+    if len(keyboard)>1:
+        for n in keyboard:
+            if(n=="/addF"):
+                op=n
+            else:
+                frase=frase+n+" "
 
-    bot.send_message(message.chat.id,"En que archivo la quieres guardar?",reply_markup=json_keyboard2)
-    archivo = message.text
-    arxiuGeneral = open(str(archivo),'a')
+        arxiuGeneral = open("feliz.txt",'a')
+        arxiuGeneral.write(frase.strip()+"\n")
+        arxiuGeneral.close()
 
-    def listener(message):
+        bot.send_message(message.chat.id,"S'ha afegit la frase: \""+frase+"\" correctament a l'arxiu feliz.txt")
 
-       for word in message:
+    else:
+        bot.send_message(message.chat.id,"Escribe la frase al lado de /addF \nEjemplo: \"/addF frase que quiero\"")
+    #bot.send_message(message.chat.id, "Que frase quieres añadir?")
+           #frase=message
+    #bot.send_message(message.chat.id, "hola")
 
-           bot.send_message(world.chat.id, "Que frase quieres añadir?")
-           frase=word.text
+@bot.message_handler(commands=['addT'])
+def add_frase(message):
+    frase=" "
+    op=" "
+    keyboard=message.text.split()
+    if len(keyboard)>1:
+        for n in keyboard:
+            if(n=="/addT"):
+                op=n
+            else:
+                frase=frase+n+" "
+
+        arxiuGeneral = open("trist.txt",'a')
+        arxiuGeneral.write(frase.strip()+"\n")
+        arxiuGeneral.close()
+
+        bot.send_message(message.chat.id,"S'ha afegit la frase: \""+frase+"\" correctament a l'arxiu trist.txt")
+
+    else:
+        bot.send_message(message.chat.id,"Escribe la frase al lado de /addT \n Ejemplo: \"/addT frase que quiero\"")
 
 
-           arxiuGeneral.write(frase+"\n")
-           arxiuGeneral.close()
-
-
-    bot.set_update_listener(listener)
 
 @bot.message_handler(func=lambda message:True)
 
@@ -97,6 +132,9 @@ def compro(message):
     if l>=1 and m>=1:
 
                 bot.send_message(message.chat.id,"Estas bien o mal?",reply_markup=json_keyboard)
+
+    elif l==0 and m==0:
+                bot.send_message(message.chat.id,"Explicame mas sobre tu día!!")
 
     else:
 
